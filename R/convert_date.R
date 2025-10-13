@@ -9,8 +9,8 @@ convert_date <- function(dates, from = "jalali") {
   time_only <- vapply(dt_split, function(x) if (length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
   
   data("jalali_greg_map", package = "jalaliR", envir = environment())
+  jalali_greg_map <- as.data.frame(jalali_greg_map)
   
-
   if(requireNamespace("data.table", quietly = TRUE)) {
     library(data.table)
     if(from=="jalali") {
