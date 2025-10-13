@@ -4,7 +4,7 @@ convert_date <- function(dates, from = "jalali") {
   to <- if(from == "jalali") "gregorian" else if(from == "gregorian") "jalali" else stop("from must be 'jalali' or 'gregorian'")
   
   # --- نرمال‌سازی ورودی ---
-  dates_norm <- normalize_date(dates, calendar = from, map_file = map_file)
+  dates_norm <- normalize_date(dates, calendar = from)
   
   # --- جدا کردن تاریخ و زمان ---
   dt_split <- strsplit(dates_norm, " ")
