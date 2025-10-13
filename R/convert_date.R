@@ -11,15 +11,16 @@ convert_date <- function(dates, from = "jalali") {
   date_only <- vapply(dt_split, `[`, 1, FUN.VALUE = character(1))
   time_only <- vapply(dt_split, function(x) if(length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
   
-  # --- بارگذاری جدول از پکیج ---
+  # بارگذاری داده از پکیج
   data("jalali_greg_map", package = "jalaliR", envir = environment())
   
-  # --- ساخت نسخه جدید دیتافریم با نام جدید و ستون character ---
+  # اطمینان از اینکه ستون‌ها character هستند و هیچ list داخلشون نیست
   jalali_greg_map2 <- data.frame(
-    jalali_date    = unlist(jalali_greg_map$jalali_date),
-    gregorian_date = unlist(jalali_greg_map$gregorian_date),
+    jalali_date    = as.character(jalali_greg_map$jalali_date),
+    gregorian_date = as.character(jalali_greg_map$gregorian_date),
     stringsAsFactors = FALSE
   )
+  
   
   # --- آماده‌سازی lookup با data.table ---
   if(requireNamespace("data.table", quietly = TRUE)) {
