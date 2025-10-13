@@ -1,6 +1,5 @@
 convert_date <- function(dates, from = "jalali") {
   k <- 1
-  
   print(paste(k, "- start function")); k <- k + 1
   
   # --- تشخیص مقصد ---
@@ -30,7 +29,9 @@ convert_date <- function(dates, from = "jalali") {
       jalali_date    = as.character(jalali_greg_map$jalali_date),
       gregorian_date = as.character(jalali_greg_map$gregorian_date)
     )
-    dt_input <- data.table(date_only = as.character(date_only))
+    
+    # مهم: تبدیل date_only به vector character ساده
+    dt_input <- data.table(date_only = as.character(unlist(date_only)))
     
     print(paste(k, "- dt_map and dt_input created")); k <- k + 1
     print(head(dt_map)); print(head(dt_input))
