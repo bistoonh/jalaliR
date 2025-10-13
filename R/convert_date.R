@@ -18,6 +18,13 @@ convert_date <- function(dates, from = "jalali") {
   
   # --- بارگذاری جدول ---
   data("jalali_greg_map", package = "jalaliR", envir = environment())
+  
+  # اطمینان از character بودن ستون‌ها
+  jalali_greg_map <- data.frame(
+    jalali_date    = as.character(jalali_greg_map$jalali_date),
+    gregorian_date = as.character(jalali_greg_map$gregorian_date),
+    stringsAsFactors = FALSE
+  )
   cat("6 - jalali_greg_map loaded\n")
   
   # --- آماده‌سازی lookup با data.table ---
