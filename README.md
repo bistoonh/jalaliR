@@ -16,8 +16,8 @@ The package uses **data.table** for high-speed processing when installed, and fa
 ## Installation
 
 ```r
-# install.packages("remotes") # if not installed
-remotes::install_github("bistoonh/jalaliR")
+# install.packages("devtools") # if not installed
+devtools::install_github("bistoonh/jalaliR", force = TRUE)
 ```
 
 ---
@@ -78,4 +78,5 @@ It is the core of the package’s **high performance** conversion functions.
 ## License
 
 MIT License
+
 
