@@ -15,10 +15,10 @@ convert_date <- function(dates, from = "jalali") {
     
     if (from == "jalali") {
       data.table::setkey(dt_map, jalali_date)
-      converted_vals <- dt_map[dt_input, on = c(jalali_date = "date_only"), .(gregorian_date)]$gregorian_date
+      converted_vals <- dt_map[dt_input, on = c(jalali_date = "date_only")][["gregorian_date"]]
     } else {
       data.table::setkey(dt_map, gregorian_date)
-      converted_vals <- dt_map[dt_input, on = c(gregorian_date = "date_only"), .(jalali_date)]$jalali_date
+      converted_vals <- dt_map[dt_input, on = c(gregorian_date = "date_only")][["jalali_date"]]
     }
     
     result_date <- converted_vals
