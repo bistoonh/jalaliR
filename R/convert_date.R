@@ -1,4 +1,4 @@
-convert_date_debug <- function(dates, from = "jalali") {
+convert_date <- function(dates, from = "jalali") {
   k <- 1
   print(k); k <- k + 1
   
