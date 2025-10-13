@@ -13,7 +13,7 @@ convert_date <- function(dates, from = "jalali") {
   time_only <- vapply(dt_split, function(x) if(length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
   
   # --- بارگذاری جدول ---
-  data("View(jalali_greg_map", package = "jalaliR")
+  data("jalali_greg_map", package = "jalaliR")
   
   # --- آماده‌سازی lookup ---
   if(requireNamespace("data.table", quietly = TRUE)) {
