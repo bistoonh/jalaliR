@@ -12,10 +12,15 @@ convert_date <- function(dates, from = "jalali") {
   time_only <- vapply(dt_split, function(x) if(length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
   
   # --- بارگذاری جدول ---
-  data("jalali_greg_map", package="jalaliR", envir=environment())
-  jalali_greg_map <- as.data.frame(jalali_greg_map)
-  jalali_greg_map$jalali_date <- as.character(jalali_greg_map$jalali_date)
-  jalali_greg_map$gregorian_date <- as.character(jalali_greg_map$gregorian_date)
+  data("jalali_greg_map", package="jalaliR", envir = environment())
+  
+  # مطمئن شدن از data.frame بودن
+  jalali_greg_map <- as.data.frame(jalali_greg_map, stringsAsFactors = FALSE)
+  
+  # ستون‌ها رو صاف به character تبدیل کن
+  jalali_greg_map$jalali_date    <- unlist(jalali_greg_map$jalali_date)
+  jalali_greg_map$gregorian_date <- unlist(jalali_greg_map$gregorian_date)
+  
   
   
   # --- آماده‌سازی lookup ---
