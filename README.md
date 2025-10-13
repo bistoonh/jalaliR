@@ -78,5 +78,3 @@ It is the core of the package’s **high performance** conversion functions.
 ## License
 
 MIT License
-
-
