@@ -1,39 +1,49 @@
 convert_date <- function(dates, from = "jalali") {
-  # --- تشخیص مقصد ---
+  cat("شروع تابع\n")
+  
   to <- if (from == "jalali") "gregorian" else if (from == "gregorian") "jalali" else stop("from must be 'jalali' or 'gregorian'")
+  cat("مقصد تعیین شد:", to, "\n")
   
-  # --- نرمال‌سازی ورودی ---
   dates_norm <- normalize_date(dates, calendar = from)
+  cat("تاریخ نرمال شد:", dates_norm, "\n")
   
-  # --- جدا کردن تاریخ و زمان ---
   dt_split <- strsplit(dates_norm, " ")
   date_only <- vapply(dt_split, `[`, 1, FUN.VALUE = character(1))
   time_only <- vapply(dt_split, function(x) if (length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
+  cat("تاریخ و زمان جدا شدند\n")
   
-  # --- بارگذاری جدول ---
   data("jalali_greg_map", package = "jalaliR", envir = environment())
+  cat("جدول بارگذاری شد\n")
   
-  # --- تبدیل با استفاده از data.table ---
   if (requireNamespace("data.table", quietly = TRUE)) {
-    library(data.table)
+    cat("data.table موجود است\n")
     
-    dt_map <- data.table(jalali_date = jalali_greg_map$jalali_date,
-                         gregorian_date = jalali_greg_map$gregorian_date)
+    dt_map <- data.table::data.table(jalali_date = jalali_greg_map$jalali_date,
+                                     gregorian_date = jalali_greg_map$gregorian_date)
+    cat("جدول تبدیل ساخته شد\n")
     
-    dt_input <- data.table(date_only = date_only)
-    dt_input[, idx := .I]  # حفظ ترتیب
+    dt_input <- data.table::data.table(date_only = date_only)
+    cat("ورودی تبدیل به data.table شد\n")
+    
+    # این خط مشکل‌دار است، پس با cat بررسی می‌کنیم
+    cat("در حال افزودن ایندکس...\n")
+    data.table::set(dt_input, j = "idx", value = seq_len(nrow(dt_input)))
+    cat("ایندکس اضافه شد\n")
     
     if (from == "jalali") {
-      setkey(dt_map, jalali_date)
+      data.table::setkey(dt_map, jalali_date)
       dt_input[, converted := dt_map[.SD, gregorian_date, on = c(jalali_date = "date_only")]]
     } else {
-      setkey(dt_map, gregorian_date)
+      data.table::setkey(dt_map, gregorian_date)
       dt_input[, converted := dt_map[.SD, jalali_date, on = c(gregorian_date = "date_only")]]
     }
     
     result_date <- dt_input$converted
+    cat("تبدیل انجام شد\n")
+    
   } else {
-    # --- fallback با list2env ---
+    cat("data.table موجود نیست، استفاده از list2env\n")
+    
     if (from == "jalali") {
       lookup_env <- list2env(setNames(as.list(jalali_greg_map$gregorian_date),
                                       jalali_greg_map$jalali_date), hash = TRUE, parent = emptyenv())
@@ -46,10 +56,12 @@ convert_date <- function(dates, from = "jalali") {
       val <- lookup_env[[x]]
       if (is.null(val)) NA_character_ else val
     }, character(1))
+    
+    cat("تبدیل با list2env انجام شد\n")
   }
   
-  # --- چسباندن زمان ---
   result <- ifelse(is.na(time_only) | time_only == "", result_date, paste(result_date, time_only))
+  cat("خروجی نهایی ساخته شد\n")
   
   return(result)
 }
