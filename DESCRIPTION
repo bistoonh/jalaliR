@@ -1,11 +1,10 @@
 Package: jalaliR
 Type: Package
-Title: Persian (Jalali) to Gregorian Date Conversion
+Title: Conversion Between Jalali and Gregorian Dates
 Version: 0.1.0
-Authors@R: person("Bistoon", "Hosseini", email = "bistoon.hosseini@example.com", role = c("aut", "cre"))
-Description: Functions to convert dates between Jalali and Gregorian calendars efficiently using a pre-built mapping table.
+Author: Bistoon Hosseini
+Maintainer: Bistoon Hosseini <bistoon.hosseini@example.com>
+Description: Provides functions for fast conversion between Jalali (Persian) and Gregorian dates using a precomputed lookup table.
 License: MIT
 Encoding: UTF-8
 LazyData: true
-Imports:
-    data.table

@@ -1,8 +1,9 @@
+
+
+
 normalize_date <- function(dates, calendar = "jalali") {
   # --- بارگذاری جدول ---
-  map_file <- system.file("extdata", "jalali_greg_map.csv", package = "jalaliR")
-  if(!file.exists(map_file)) stop("Mapping CSV file not found in package!")
-  jalali_greg_map <- read.csv(map_file, stringsAsFactors = FALSE)
+  data("jalali_greg_map", package = "jalaliR")
   
   # --- آماده‌سازی داده ---
   dates <- trimws(as.character(dates))
