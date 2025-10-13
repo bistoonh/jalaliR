@@ -15,14 +15,13 @@ convert_date <- function(dates, from = "jalali") {
     
     if (from == "jalali") {
       data.table::setkey(dt_map, jalali_date)
-      converted_vals <- dt_map[dt_input, on = c(jalali_date = "date_only"), gregorian_date]
+      converted_vals <- dt_map[dt_input, on = c(jalali_date = "date_only"), .(gregorian_date)]$gregorian_date
     } else {
       data.table::setkey(dt_map, gregorian_date)
-      converted_vals <- dt_map[dt_input, on = c(gregorian_date = "date_only"), jalali_date]
+      converted_vals <- dt_map[dt_input, on = c(gregorian_date = "date_only"), .(jalali_date)]$jalali_date
     }
     
-    data.table::set(dt_input, j = "converted", value = converted_vals)
-    result_date <- dt_input$converted
+    result_date <- converted_vals
   } else {
     if (from == "jalali") {
       lookup_env <- list2env(setNames(as.list(jalali_greg_map$gregorian_date),
