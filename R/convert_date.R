@@ -10,48 +10,39 @@ convert_date <- function(dates, from = "jalali") {
   
   data("jalali_greg_map", package = "jalaliR", envir = environment())
   
-  # 👇 اصلاح ساختار در صورت لود تودرتو
-  if ("jalali_greg_map" %in% names(jalali_greg_map))
-    jalali_greg_map <- jalali_greg_map$jalali_greg_map
-  
-  if (requireNamespace("data.table", quietly = TRUE)) {
+
+  if(requireNamespace("data.table", quietly = TRUE)) {
     library(data.table)
-    if (from == "jalali") {
-      dt_map <- data.table(
-        jalali_date = jalali_greg_map$jalali_date,
-        gregorian_date = jalali_greg_map$gregorian_date
-      )
+    if(from=="jalali") {
+      dt_map <- data.table(jalali_date = jalali_greg_map$jalali_date,
+                           gregorian_date = jalali_greg_map$gregorian_date)
       setkey(dt_map, jalali_date)
       dt_input <- data.table(date_only = date_only)
-      dt_join <- dt_map[dt_input, on = c("jalali_date" = "date_only"), nomatch = 0]
+      dt_join <- dt_map[dt_input, on = c("jalali_date"="date_only"), nomatch=NA]
+      
+      # اجباری: تبدیل خروجی جوین به character
+      dt_join <- dt_join[, lapply(.SD, as.character)]
+      
       result_date <- rep(NA_character_, length(date_only))
       idx_match <- match(date_only, dt_join$jalali_date)
-      result_date[!is.na(idx_match)] <- dt_join$gregorian_date[na.omit(idx_match)]
+      result_date[!is.na(idx_match)] <- dt_join$gregorian_date[!is.na(idx_match)]
+      
     } else {
-      dt_map <- data.table(
-        jalali_date = jalali_greg_map$jalali_date,
-        gregorian_date = jalali_greg_map$gregorian_date
-      )
+      dt_map <- data.table(jalali_date = jalali_greg_map$jalali_date,
+                           gregorian_date = jalali_greg_map$gregorian_date)
       setkey(dt_map, gregorian_date)
       dt_input <- data.table(date_only = date_only)
-      dt_join <- dt_map[dt_input, on = c("gregorian_date" = "date_only"), nomatch = 0]
+      dt_join <- dt_map[dt_input, on = c("gregorian_date"="date_only"), nomatch=NA]
+      
+      # اجباری: تبدیل خروجی جوین به character
+      dt_join <- dt_join[, lapply(.SD, as.character)]
+      
       result_date <- rep(NA_character_, length(date_only))
       idx_match <- match(date_only, dt_join$gregorian_date)
-      result_date[!is.na(idx_match)] <- dt_join$jalali_date[na.omit(idx_match)]
+      result_date[!is.na(idx_match)] <- dt_join$jalali_date[!is.na(idx_match)]
     }
-  } else {
-    if (from == "jalali") {
-      lookup_env <- list2env(setNames(as.list(jalali_greg_map$gregorian_date), jalali_greg_map$jalali_date),
-                             hash = TRUE, parent = emptyenv())
-    } else {
-      lookup_env <- list2env(setNames(as.list(jalali_greg_map$jalali_date), jalali_greg_map$gregorian_date),
-                             hash = TRUE, parent = emptyenv())
-    }
-    result_date <- vapply(date_only, function(x) {
-      val <- lookup_env[[x]]
-      if (is.null(val)) NA_character_ else val
-    }, character(1))
   }
+  
   
   result <- ifelse(is.na(time_only) | time_only == "", result_date, paste(result_date, time_only))
   
