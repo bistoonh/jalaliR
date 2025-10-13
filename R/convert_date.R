@@ -11,9 +11,8 @@ convert_date <- function(dates, from = "jalali") {
   
   # --- جدا کردن تاریخ و زمان ---
   dt_split <- strsplit(dates_norm, " ")
-  date_only <- vapply(dt_split, `[`, 1, FUN.VALUE = character(1))
-  date_only <- as.character(unlist(date_only))   # <- مهم: اطمینان از character
-  time_only <- vapply(dt_split, function(x) if(length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))
+  date_only <- as.character(unlist(vapply(dt_split, `[`, 1, FUN.VALUE = character(1))))
+  time_only <- as.character(unlist(vapply(dt_split, function(x) if(length(x) > 1) x[2] else NA_character_, FUN.VALUE = character(1))))
   cat("4 - date_only:", date_only, "\n")
   cat("5 - time_only:", time_only, "\n")
   
@@ -30,7 +29,7 @@ convert_date <- function(dates, from = "jalali") {
       gregorian_date = as.character(jalali_greg_map$gregorian_date)
     )
     
-    dt_input <- data.table(date_only = date_only)
+    dt_input <- data.table(date_only = as.character(date_only))  # <- این مهمه
     cat("7 - dt_map and dt_input created\n")
     
     if(from == "jalali") {
