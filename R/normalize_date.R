@@ -1,16 +1,17 @@
 normalize_date <- function(dates, calendar = "jalali") {
-  # --- بارگذاری جدول (از data/ پکیج) ---
+  # --- Load mapping table from package data ---
   data("jalali_greg_map", package = "jalaliR")
   
-  # --- آماده‌سازی داده ---
+  # --- Prepare input data ---
   dates <- trimws(as.character(dates))
   dates <- gsub("[/\\.]", "-", dates)
-  # جدا کردن بخش زمان (اگر باشد)
+  
+  # Split time part if present
   time_part <- sub("^[^ ]*(?: (.*))?$", "\\1", dates)
   time_part[time_part == ""] <- NA_character_
   date_part <- sub(" .*", "", dates)
   
-  # --- نرمال‌سازی تاریخ (فرمت‌های 8 رقمی، 6 رقمی، yyyy-mm و yyyy-mm-dd) ---
+  # --- Normalize date formats (e.g. yyyymmdd, yyyymm, yyyy-mm, yyyy-mm-dd) ---
   date_norm <- ifelse(grepl("^\\d{8}$", date_part),
                       sprintf("%04d-%02d-%02d",
                               as.integer(substr(date_part,1,4)),
@@ -22,7 +23,7 @@ normalize_date <- function(dates, calendar = "jalali") {
                                      as.integer(substr(date_part,5,6))),
                              date_part))
   
-  # استانداردسازی موارد yyyy-mm -> yyyy-mm-01 و پر کردن صفرها
+  # Normalize yyyy-mm → yyyy-mm-01 and pad zeros
   idx <- !grepl("^\\d{4}-\\d{2}-\\d{2}$", date_norm)
   if (any(idx)) {
     date_norm[idx] <- sub("^([0-9]{4}-[0-9]{1,2})$", "\\1-01", date_norm[idx])
@@ -33,21 +34,20 @@ normalize_date <- function(dates, calendar = "jalali") {
     date_norm[idx] <- paste0(y,"-",m,"-",d)
   }
   
-  # اطمینان از اینکه date_norm یک وکتور کاراکتری است (نه لیست)
+  # Ensure date_norm is a character vector
   date_norm <- as.character(date_norm)
   
-  # --- اعتبارسنجی تاریخ‌ها با جدول موجود در پکیج ---
-  # استفاده از membership ساده برای جلوگیری از مشکلات list-column در join
+  # --- Validate dates using lookup table ---
   date_vec <- if (calendar == "jalali") as.character(jalali_greg_map$jalali_date) else as.character(jalali_greg_map$gregorian_date)
   valid_idx <- date_norm %in% date_vec
   date_norm[!valid_idx] <- NA_character_
   
-  # --- پردازش زمان ---
+  # --- Process time part ---
   time_norm <- rep("", length(time_part))
   idx_time <- !is.na(time_part) & !is.na(date_norm)
   if (any(idx_time)) {
     t <- time_part[idx_time]
-    # استخراج ساعت:دقیقه:ثانیه با الگوی ساده‌تر و محافظت در مقابل NA
+    # Extract hour:minute:second with basic pattern and NA protection
     h <- as.integer(sub("^([0-9]{1,2}).*", "\\1", t))
     m <- as.integer(sub("^[0-9]{1,2}:([0-9]{1,2}).*", "\\1", t))
     s <- as.integer(sub("^[0-9]{1,2}:[0-9]{1,2}:?([0-9]{1,2})?.*", "\\1", t))
@@ -58,7 +58,7 @@ normalize_date <- function(dates, calendar = "jalali") {
     time_norm[idx_time] <- ifelse(invalid, NA_character_, sprintf("%02d:%02d:%02d", h, m, s))
   }
   
-  # --- ترکیب تاریخ و زمان ---
+  # --- Combine date and time ---
   result <- ifelse(time_norm == "", date_norm, paste(date_norm, time_norm))
   return(result)
 }
