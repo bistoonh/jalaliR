@@ -17,5 +17,5 @@ Character vector of normalized dates.
 }
 \examples{
 normalize_date(c("14020101", "1402-01", "1402-01-01 14:30:00"))
-normalize_date(c("2023/03/21", "2023-03", "2023-03-21 08:15"))
+normalize_date(c("2023/03/21", "2023-03", "2023-03-21 08:15"), calendar = "gregorian")
 }
