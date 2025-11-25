@@ -3,11 +3,12 @@
 **jalaliR** is an R package for **fast and accurate conversion** between Jalali (Persian) and Gregorian calendars.  
 It efficiently handles **large datasets** using a **pre-built mapping table** covering the years **1300–1500 (Jalali)**.
 
-The package provides three main functions:
+The package provides four main functions:
 
 1. `normalize_date()`: Normalize date strings to `"YYYY-MM-DD"` format, with optional time. Automatically fixes incomplete dates and hours/minutes/seconds.  
 2. `convert_date()`: Convert dates from Jalali to Gregorian or vice versa using the pre-built mapping.  
-3. `day2day()`: Generate a sequence of dates between two given dates, including optional start and end times.
+3. `day2day()`: Generate a sequence of dates between two given dates, including optional start and end times.  
+4. `jalali_diff()`: Compute the difference in days between two Jalali dates using fast index lookup.
 
 The package uses **data.table** for high-speed processing when installed, and falls back to a fast hash-based lookup if not.  
 
@@ -18,6 +19,7 @@ The package uses **data.table** for high-speed processing when installed, and fa
 ```r
 # install.packages("devtools") # if not installed
 devtools::install_github("bistoonh/jalaliR", force = TRUE)
+
 ```
 
 ---
@@ -57,6 +59,15 @@ dates <- c("1402-01-01", "1402-05-15", "1402-12-29")
 convert_date(dates, from = "jalali")
 # Returns:
 # [1] "2023-03-21" "2023-08-06" "2024-03-18"
+
+# Compute day differences between Jalali dates
+jalali_diff("1402-01-01", "1402-01-03")
+# Returns:
+# [1] 2
+
+jalali_diff(c("1402-01-01","1402-01-05"), c("1402-01-03","1402-01-10"))
+# Returns:
+# [1] 2 5
 ```
 
 ---
