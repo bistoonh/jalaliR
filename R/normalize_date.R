@@ -25,7 +25,9 @@ normalize_date <- function(dates, calendar = "jalali") {
                                date_part))
     
     # Normalize yyyy-mm → yyyy-mm-01 and pad zeros
-    idx <- !grepl("^\\d{4}-\\d{2}-\\d{2}$", date_norm)
+    # Only process items that look like potential dates (have at least one dash and reasonable format)
+    idx <- !grepl("^\\d{4}-\\d{2}-\\d{2}$", date_norm) & grepl("^\\d{4}-\\d{1,2}(-\\d{1,2})?$", date_norm)
+    
     if (any(idx)) {
       date_norm[idx] <- sub("^([0-9]{4}-[0-9]{1,2})$", "\\1-01", date_norm[idx])
       parts <- do.call(rbind, strsplit(date_norm[idx], "-"))
