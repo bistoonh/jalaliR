@@ -1,7 +1,7 @@
 # jalaliR
 
 **jalaliR** is an R package for **fast and accurate conversion** between Jalali (Persian) and Gregorian calendars.  
-It efficiently handles **large datasets** using a **pre-built mapping table** covering the years **1300–1500 (Jalali)**.
+It efficiently handles **large datasets** using a **pre-built mapping table** covering the years **1000–1600 (Jalali)**.
 
 The package provides five main functions:
 
@@ -87,3 +87,4 @@ It is the core of the package’s **high performance** conversion functions.
 ## License
 
 MIT License
+
