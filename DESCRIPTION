@@ -3,7 +3,7 @@ Type: Package
 Title: Conversion Between Jalali and Gregorian Dates
 Version: 0.1.0
 Author: Bistoon Hosseini
-Maintainer: Bistoon Hosseini <bistoon.hosseini@example.com>
+Maintainer: Bistoon Hosseini <bistoon.hosseini@gmail.com>
 Description: Provides functions for fast conversion between Jalali (Persian) and Gregorian dates using a precomputed lookup table.
 License: MIT
 Encoding: UTF-8
